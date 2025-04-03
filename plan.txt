@@ -1,0 +1,28 @@
+Idea: Kahoot, but players bet points on their answers.
+
+Frontend:
+    - Browse quizzes 
+      / Quiz Setup
+        |
+        |
+        ↓ 
+    - Lobby
+
+    - Join Game with Code
+
+
+Backend:
+    - join-game
+        - game code
+
+    - answer
+        - game code
+        - user
+        - question number
+
+    Web Socket Events
+        - start-round
+            - emits question to listeners in game room
+
+        - end-round
+            - marks answers and emits results for the round
