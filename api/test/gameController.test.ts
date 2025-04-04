@@ -101,7 +101,7 @@ describe("Game Controller should", () => {
         };
 
         const playerB = {
-            code: Math.floor(Math.random() * 10), // Different game room
+            code: Math.floor(1 + Math.random() * 10), // Different game room
             name: "player-1"
         };
 
