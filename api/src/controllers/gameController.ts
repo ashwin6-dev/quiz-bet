@@ -1,3 +1,4 @@
+import Game from "../models/game";
 import WSSResponse from "../wss-response";
 import Controller from "./controllers";
 
@@ -7,12 +8,28 @@ interface GameRequest {
 }
 
 class GameController extends Controller { 
+    private games!: Map<number, Game>;
+
     protected init(): void {
-        this.addEventHandler("joinGame", this.joinGame)
+        this.games = new Map<number, Game>();
+        this.addEventHandler("joinGame", this.joinGame.bind(this))
     }
 
     private joinGame(data: GameRequest): WSSResponse {
-        return { success: false };
+        const { code, name } = data;
+        let game = this.games.get(code);
+
+        if (!game) {
+            game = new Game();
+            this.games.set(code, game);
+        }
+
+        if (!game.hasPlayer(name)) {
+            game.addPlayer(name);
+            return { success: true };
+        } else {
+            return { success: false };
+        }
     }
 }
 
