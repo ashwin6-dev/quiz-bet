@@ -18,10 +18,12 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@types/mongoose": "^5.11.96",
     "@types/socket.io": "^3.0.1",
     "@types/socket.io-client": "^1.4.36",
     "@types/supertest": "^6.0.3",
     "express": "^5.1.0",
+    "mongoose": "^8.13.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
     "supertest": "^7.1.0",

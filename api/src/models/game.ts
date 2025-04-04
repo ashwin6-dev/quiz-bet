@@ -1,17 +1,11 @@
-class Game {
-    private players: Set<string>;
+import mongoose from "mongoose";
+import { PlayerSchema } from "./player";
 
-    constructor() {
-        this.players = new Set<string>();
-    }
+const GameSchema = new mongoose.Schema({
+  code: { type: Number, required: true },
+  players: [PlayerSchema]
+});
 
-    addPlayer(name: string): void {
-        this.players.add(name);
-    }
+const GameModel = mongoose.model("Game", GameSchema);
 
-    hasPlayer(name: string): boolean {
-        return this.players.has(name);
-    }
-}
-
-export default Game;
+export default GameModel;
