@@ -47,8 +47,8 @@ describe("Game Controller should", () => {
     });
 
     it("let player join an empty game", (done) => {
-        mockHasPlayer.mockReturnValue(false); // Player does not exist
-        mockAddPlayer.mockImplementation(() => {}); // Mock player addition
+        mockHasPlayer.mockResolvedValue(false); // Player does not exist
+        mockAddPlayer.mockImplementation(async () => {}); // Mock player addition
 
         const data = {
             code: 0,
@@ -65,9 +65,9 @@ describe("Game Controller should", () => {
     });
 
     it("deny player to join a game with already taken name", (done) => {
-        mockHasPlayer.mockReturnValueOnce(false); // First join: player not in game
-        mockHasPlayer.mockReturnValueOnce(true);  // Second join: player exists
-        mockAddPlayer.mockImplementation(() => {});
+        mockHasPlayer.mockResolvedValueOnce(false); // First join: player not in game
+        mockHasPlayer.mockResolvedValueOnce(true);  // Second join: player exists
+        mockAddPlayer.mockImplementation(async () => {});
 
         const data = {
             code: 0,
@@ -91,9 +91,9 @@ describe("Game Controller should", () => {
     });
 
     it("let two players join with the same name if game rooms are different", (done) => {
-        mockHasPlayer.mockImplementationOnce((code) => code != 0); // player does not exist in game 0
-        mockHasPlayer.mockImplementationOnce((code) => code == 0); // player now exists in game 1
-        mockAddPlayer.mockImplementation(() => {});
+        mockHasPlayer.mockImplementationOnce(async (code) => code != 0); // player does not exist in game 0
+        mockHasPlayer.mockImplementationOnce(async (code) => code == 0); // player now exists in game 1
+        mockAddPlayer.mockImplementation(async () => {});
 
         const playerA = {
             code: 0,

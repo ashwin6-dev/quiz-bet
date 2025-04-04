@@ -12,10 +12,10 @@ class GameController extends Controller {
         this.addEventHandler("joinGame", this.joinGame.bind(this))
     }
 
-    private joinGame(data: GameRequest): WSSResponse {
+    private async joinGame(data: GameRequest): Promise<WSSResponse> {
         const { code, name } = data;
 
-        if (GameService.hasPlayer(code, name)) {
+        if (await GameService.hasPlayer(code, name)) {
             return { success : false }
         }
 

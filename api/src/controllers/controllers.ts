@@ -13,9 +13,9 @@ abstract class Controller {
 
     protected abstract init(): void;
 
-    protected addEventHandler(event: string, handler: (...args: any[]) => WSSResponse): void {
-        this.socket.on(event, (...args: any[]) => {
-            let response = handler(...args);
+    protected addEventHandler(event: string, handler: (...args: any[]) => Promise<WSSResponse> | WSSResponse): void {
+        this.socket.on(event, async (...args: any[]) => {
+            let response = await handler(...args);
             this.socket.send(response);
         })
     }

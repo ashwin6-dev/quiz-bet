@@ -1,10 +1,24 @@
+import GameModel from "../models/game";
+
 class GameService {
-    static hasPlayer(code: number, name: string): boolean {
-        return false;
+    static async hasPlayer(code: number, name: string): Promise<boolean> {
+        const game = await GameModel.findOne({ code });
+        return game ? game.players.some(player => player.name === name) : false;
     }
 
-    static addPlayer(code: number, name: string): void {
-        return;
+    static async addPlayer(code: number, name: string): Promise<void> {
+        let game = await GameModel.findOne({ code });
+
+        if (!game) {
+            game = new GameModel({ code, players: [{ name }] });
+        } else {
+            const playerExists = game.players.some(player => player.name === name);
+            if (!playerExists) {
+                game.players.push({ name });
+            }
+        }
+
+        await game.save();
     }
 }
 
