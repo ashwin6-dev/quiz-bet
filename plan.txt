@@ -12,13 +12,19 @@ Frontend:
 
 
 Backend:
-    - join-game
-        - game code
+    - game
+        - join
+            - game code
+            - player name
 
-    - answer
-        - game code
-        - user
-        - question number
+        - answer
+            - game code
+            - user
+            - question number
+
+    - quiz
+        - new
+        - search
 
     Web Socket Events
         - start-round
