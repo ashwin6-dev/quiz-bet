@@ -6,7 +6,7 @@ interface GameRequest {
     name: string;
 }
 
-class GameController extends Controller {
+class GameController extends Controller { 
     protected init(): void {
         this.addEventHandler("joinGame", this.joinGame)
     }
