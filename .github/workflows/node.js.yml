@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - feature/*
+      - feature/api/join-game
   pull_request:
     branches: [ "main" ]
 
