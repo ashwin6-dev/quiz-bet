@@ -1,9 +1,9 @@
 import io from "socket.io-client";
-import { server, PORT } from "../src/server";
-import WSSResponse from "../src/wss-response";
-import GameService from "../src/services/game-service";
+import { server, PORT } from "../../src/server";
+import WSSResponse from "../../src/wss-response";
+import GameService from "../../src/services/game-service";
 
-jest.mock("../src/services/game-service");
+jest.mock("../../src/services/game-service");
 
 const mockHasPlayer = jest.spyOn(GameService, "hasPlayer");
 const mockAddPlayer = jest.spyOn(GameService, "addPlayer");
