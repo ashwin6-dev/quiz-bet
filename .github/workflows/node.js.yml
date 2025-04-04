@@ -5,9 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
-      - feature/api/join-game
+    branches: ["**"]
   pull_request:
     branches: [ "main" ]
 
