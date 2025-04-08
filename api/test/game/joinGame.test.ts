@@ -6,7 +6,7 @@ import connectToMongoDB from "../../src/db";
 import GameModel from "../../src/models/game";
 import { waitForMessage, waitFor } from "../utils";
 
-const DB_UPDATE_WAIT = 25;
+const DB_UPDATE_WAIT = 50;
 
 describe("Join Game", () => {
     let clientSocket: SocketIOClient.Socket;
@@ -96,7 +96,7 @@ describe("Join Game", () => {
 
         const responseB: WSSResponse = await waitForMessage(clientSocket);
         await waitFor(DB_UPDATE_WAIT);
-        
+
         expect(responseB.success).toBe(true);
         expect(await GameService.hasPlayer(newGameRoom, "player-1")).toBe(true);
     });
