@@ -8,7 +8,7 @@ class GameService {
 
     static async addPlayer(code: number, name: string): Promise<void> {
         let game = await GameModel.findOne({ code });
-
+        
         if (!game) {
             game = new GameModel({ code, players: [{ name }] });
         } else {

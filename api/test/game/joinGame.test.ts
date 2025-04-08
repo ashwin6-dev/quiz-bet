@@ -2,15 +2,19 @@ import io from "socket.io-client";
 import { server, PORT } from "../../src/server";
 import WSSResponse from "../../src/wss-response";
 import GameService from "../../src/services/gameService";
-import { waitForMessage } from "../utils";
+import connectToMongoDB from "../../src/db";
+import GameModel from "../../src/models/game";
+import { waitForMessage, waitFor } from "../utils";
 
-jest.mock("../../src/services/gameService");
+const DB_UPDATE_WAIT = 25;
 
-const mockHasPlayer = jest.spyOn(GameService, "hasPlayer");
-const mockAddPlayer = jest.spyOn(GameService, "addPlayer");
-
-describe("Game Controller should", () => {
+describe("Join Game", () => {
     let clientSocket: SocketIOClient.Socket;
+
+    beforeAll(async () => {
+        await connectToMongoDB();
+        await GameModel.deleteMany({});
+    })
 
     beforeEach((done) => {
         clientSocket = io(`http://localhost:${PORT}`);
@@ -19,9 +23,9 @@ describe("Game Controller should", () => {
         });
     });
 
-    afterEach(() => {
+    afterEach(async () => {
         clientSocket.disconnect();
-        jest.clearAllMocks(); // Reset mocks after each test
+        await GameModel.deleteMany({});
     });
 
     afterAll((done) => {
@@ -31,9 +35,6 @@ describe("Game Controller should", () => {
     });
 
     it("let player join an empty game", async () => {
-        mockHasPlayer.mockResolvedValue(false); // Player does not exist
-        mockAddPlayer.mockImplementation(async () => {}); // Mock player addition
-
         const data = {
             code: 0,
             name: "player-1"
@@ -42,16 +43,13 @@ describe("Game Controller should", () => {
         clientSocket.emit("joinGame", data);
 
         const response: WSSResponse = await waitForMessage(clientSocket);
+        await waitFor(DB_UPDATE_WAIT);
+
         expect(response.success).toBe(true);
-        expect(mockHasPlayer).toHaveBeenCalledWith(0, "player-1");
-        expect(mockAddPlayer).toHaveBeenCalledWith(0, "player-1");
+        expect(await GameService.hasPlayer(0, "player-1")).toBe(true);
     });
 
     it("deny player to join a game with already taken name", async () => {
-        mockHasPlayer.mockResolvedValueOnce(false); // First join: player not in game
-        mockHasPlayer.mockResolvedValueOnce(true);  // Second join: player exists
-        mockAddPlayer.mockImplementation(async () => {});
-
         const data = {
             code: 0,
             name: "player-1"
@@ -60,41 +58,46 @@ describe("Game Controller should", () => {
         clientSocket.emit("joinGame", data);
 
         const firstResponse: WSSResponse = await waitForMessage(clientSocket);
-        expect(firstResponse.success).toBe(true)
-        expect(mockHasPlayer).toHaveBeenCalledWith(0, "player-1");
-        expect(mockAddPlayer).toHaveBeenCalledWith(0, "player-1");
+        await waitFor(DB_UPDATE_WAIT);
 
-        // Now attempt to join again with the same name
+        expect(firstResponse.success).toBe(true);
+
         clientSocket.emit("joinGame", data);
 
         const secondResponse: WSSResponse = await waitForMessage(clientSocket);
-        expect(secondResponse.success).toBe(false)
-        expect(mockHasPlayer).toHaveBeenCalledTimes(2);
+        await waitFor(DB_UPDATE_WAIT);
+
+        expect(secondResponse.success).toBe(false);
+        expect(await GameService.hasPlayer(0, "player-1")).toBe(true);
     });
 
     it("let two players join with the same name if game rooms are different", async () => {
-        mockHasPlayer.mockImplementationOnce(async (code) => code != 0); // player does not exist in game 0
-        mockHasPlayer.mockImplementationOnce(async (code) => code == 0); // player now exists in game 1
-        mockAddPlayer.mockImplementation(async () => {});
-
         const playerA = {
             code: 0,
             name: "player-1"
         };
 
+        const newGameRoom = Math.floor(Math.random() * 10) + 1;
         const playerB = {
-            code: Math.floor(Math.random() * 10) + 1, // Different game room
+            code: newGameRoom, // Different game room
             name: "player-1"
         };
 
         clientSocket.emit("joinGame", playerA);
 
+
         const responseA: WSSResponse = await waitForMessage(clientSocket);
+        await waitFor(DB_UPDATE_WAIT);
+
+        expect(await GameService.hasPlayer(0, "player-1")).toBe(true);
         expect(responseA.success).toBe(true);
 
         clientSocket.emit("joinGame", playerB);
 
         const responseB: WSSResponse = await waitForMessage(clientSocket);
+        await waitFor(DB_UPDATE_WAIT);
+        
         expect(responseB.success).toBe(true);
+        expect(await GameService.hasPlayer(newGameRoom, "player-1")).toBe(true);
     });
 });

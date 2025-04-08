@@ -1,4 +1,4 @@
-import GameService from "../../src/services/game-service";
+import GameService from "../../src/services/gameService";
 import GameModel from "../../src/models/game";
 
 jest.mock("../../src/models/game")

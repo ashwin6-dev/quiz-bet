@@ -1,4 +1,4 @@
-import GameService from "../services/game-service";
+import GameService from "../services/gameService";
 import WSSResponse from "../wss-response";
 import Controller from "./controllers";
 
@@ -14,8 +14,9 @@ class GameController extends Controller {
 
     private async joinGame(data: GameRequest): Promise<WSSResponse> {
         const { code, name } = data;
+        const gameHasPlayer = await GameService.hasPlayer(code, name)
 
-        if (await GameService.hasPlayer(code, name)) {
+        if (gameHasPlayer) {
             return { success : false }
         }
 
