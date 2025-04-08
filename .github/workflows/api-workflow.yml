@@ -23,6 +23,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        
+    - name: Add DB URL to .env
+      working-directory: ./api
+      run: echo "DB_URL=${{ secrets.DB_URL }}" > .env
+      
     - name: Install and Test
       working-directory: ./api
       run: npm install && npm test
