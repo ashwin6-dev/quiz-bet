@@ -4,6 +4,7 @@ const DEFAULT_POINTS = 100;
 
 const PlayerSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  code: { type: Number, required: true},
   points: { type: Number, default: DEFAULT_POINTS }
 });
 

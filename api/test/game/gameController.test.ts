@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { server, PORT } from "../../src/server";
 import WSSResponse from "../../src/wss-response";
-import GameService from "../../src/services/gameService";
 import { waitForMessage } from "../utils";
+import PlayerService from "../../src/services/playerService";
 
 jest.mock("../../src/services/gameService");
 
-const mockHasPlayer = jest.spyOn(GameService, "hasPlayer");
-const mockAddPlayer = jest.spyOn(GameService, "addPlayer");
+const mockHasPlayer = jest.spyOn(PlayerService, "hasPlayer");
+const mockAddPlayer = jest.spyOn(PlayerService, "addPlayer");
 
 describe("Game Controller should", () => {
     let clientSocket: SocketIOClient.Socket;
