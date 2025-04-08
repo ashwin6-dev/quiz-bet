@@ -21,6 +21,8 @@ class GameController extends Controller {
         }
 
         GameService.addPlayer(code, name);
+
+        this.socket.to(code.toString());
         return { success : true };
     }
 }
