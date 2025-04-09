@@ -1,6 +1,6 @@
 import PlayerService from "../services/playerService";
 import WSSResponse from "../wss-response";
-import Controller from "./controllers";
+import Controller from "./ws-controllers";
 
 interface GameRequest {
     code: number;
