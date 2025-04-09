@@ -1,5 +1,8 @@
 import { Router } from "express";
+import QuestionController from "../controllers/questionController";
 
 const router = Router();
 
-router.get("/add", );
+new QuestionController(router);
+
+export default router;
