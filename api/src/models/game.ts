@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { PlayerSchema } from "./player";
+import { QuestionSchema } from "./question";
 
 const GameSchema = new mongoose.Schema({
   code: { type: Number, required: true },
-  players: [PlayerSchema]
+  questions: { type: [QuestionSchema], required: true }
 });
 
 const GameModel = mongoose.model("Game", GameSchema);

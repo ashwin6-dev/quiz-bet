@@ -1,7 +1,7 @@
 import app from "./app";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import GameController from "./controllers/gameController";
+import GameWSController from "./ws-controllers/gameController";
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -9,7 +9,7 @@ const io = new Server(server, {
 });
 
 const addSocketControllers = (socket: Socket) => {
-    new GameController(socket, io);
+    new GameWSController(socket, io);
 }
 
 io.on("connection", addSocketControllers);
