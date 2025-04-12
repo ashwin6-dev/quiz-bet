@@ -1,9 +1,10 @@
 import { QuestionModel } from "../models/question";
 import axios from "axios";
 
-const embedText = async (text: string) => {
+const embedText = async (text: string, useAdapter: boolean = false) => {
     const response = await axios.post("localhost:5000", {
-        text
+        text,
+        useAdapter
     });
 
     const { embedding } = response.data;
