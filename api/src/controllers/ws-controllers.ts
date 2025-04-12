@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import WSSResponse from "../wss-response";
 
-abstract class Controller {
+abstract class WSController {
     protected socket: Socket;
     protected io: Server;
 
@@ -21,4 +21,4 @@ abstract class Controller {
     }
 }
 
-export default Controller;
+export default WSController;
